@@ -21,16 +21,12 @@ async function runMocha(mocha, options) {
   // if options.watch
   // watchRun(mocha, { watchFiles, watchIgnore }, fileCollectParams);
 
-  await singleRun(mocha, { exit }, fileCollectParams);
-}
-async function singleRun(mocha, { exit }, fileCollectParams) {
+  // singleRun
   const files = collectFiles(fileCollectParams);
   mocha.files = files;
-
   await mocha.loadFilesAsync();
-
   return mocha.run(exit ? exitMocha : exitMochaLater);
-};
+}
 
 // Exits Mocha when tests + code under test has finished execution (default)
 const exitMochaLater = code => {
