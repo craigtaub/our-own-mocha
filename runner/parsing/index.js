@@ -1,17 +1,9 @@
 const yargs = require("yargs");
 const yargsParser = require("yargs-parser");
 const Mocha = require("../mocha");
+const defaults = require("../mocha/defaults");
 
-// 1. Parsing phase
 const parsingPhase = (runMocha) => {
-
-  // lib/mocharc.json
-  const defaults = {
-    diff: true,
-    extension: ['js', 'cjs', 'mjs'],
-    reporter: 'spec',
-    ui: 'bdd',
-  }
 
   // lib/cli/commands.js -> lib/cli/run.js
   const builder = (yargs) => {
@@ -73,11 +65,6 @@ const parsingPhase = (runMocha) => {
   yargs()
     .scriptName('our_mocha')
     .command(commands.run)
-    .updateStrings({
-      'Positionals:': 'Positional Arguments',
-      'Options:': 'Other Options',
-      'Commands:': 'Commands'
-    })
     .fail((msg, err, yargs) => {
       yargs.showHelp();
       const message = msg || err.message
@@ -85,14 +72,8 @@ const parsingPhase = (runMocha) => {
       process.exit(1);
     })
     .help('help', 'Show usage information & exit')
-    .alias('help', 'h')
     .version('version', 'Show version number & exit', "1.0")
-    .alias('version', 'V')
-    .epilog(
-      `Mocha Resources:
-      Here: ...
-      `
-    )
+    .epilog('Mocha Resources: ...')
     .config(args)
     .parse(args._);
 }

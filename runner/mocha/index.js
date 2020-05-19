@@ -1,10 +1,10 @@
-const path = require('path');
+const path = require("path");
 const Base = require("./reporters/base");
 const Spec = require("./reporters/spec");
 const Suite = require("./suite");
-const Context = require("./context");
 const Test = require("./test");
 const Runner = require("./runner");
+const defaults = require("./defaults");
 
 // lib/stats-collector.js
 function createStatsCollector(runner) {
@@ -46,19 +46,14 @@ function createStatsCollector(runner) {
   });
 }
 
-// lib/mocharc.json
-const defaults = {
-  diff: true,
-  extension: ['js', 'cjs', 'mjs'],
-  reporter: 'spec',
-  ui: 'bdd',
-}
-
 // Mocha instance with options
 // lib/mocha.js
 function Mocha(options) {
   this.files = [];
   this.options = options;
+
+  // lib/context.js. empty context
+  function Context() { }
   // root suite
   this.suite = new Suite('', new Context(), true);
 
@@ -73,12 +68,12 @@ Mocha.prototype.ui = function (ui) {
   bindInterface(this.suite);
 
   this.suite.on(Suite.constants.EVENT_FILE_PRE_REQUIRE, function (context) {
-    exports.afterEach = context.afterEach || context.teardown;
-    exports.after = context.after || context.suiteTeardown;
-    exports.beforeEach = context.beforeEach || context.setup;
-    exports.before = context.before || context.suiteSetup;
-    exports.describe = context.describe || context.suite;
-    exports.it = context.it || context.test;
+    exports.afterEach = context.afterEach;
+    exports.after = context.after;
+    exports.beforeEach = context.beforeEach;
+    exports.before = context.before;
+    exports.describe = context.describe;
+    exports.it = context.it;
   });
 
   return this;
@@ -144,7 +139,7 @@ Mocha.interfaces = {
       context.beforeEach = common.beforeEach;
       context.afterEach = common.afterEach;
 
-      context.describe = context.context = function (title, fn) {
+      context.describe = function (title, fn) {
         return common.suite.create({
           title: title,
           file: file,
@@ -152,7 +147,7 @@ Mocha.interfaces = {
         });
       };
 
-      context.it = context.specify = function (title, fn) {
+      context.it = function (title, fn) {
         var suite = suites[0];
         var test = new Test(title, fn);
         test.file = file;
@@ -166,7 +161,6 @@ Mocha.interfaces = {
 Mocha.prototype.loadFilesAsync = function () {
   var self = this;
   var suite = this.suite;
-  this.loadAsync = true;
 
   const requireOrImport = async file => {
     file = path.resolve(file);

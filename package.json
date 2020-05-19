@@ -1,7 +1,7 @@
 {
-  "name": "test-runner",
+  "name": "our-own-mocha",
   "version": "1.0.0",
-  "description": "",
+  "description": "A slimmed down version of the test runner Mocha",
   "main": "index.js",
   "scripts": {
     "help": "node runner/index.js --help",
