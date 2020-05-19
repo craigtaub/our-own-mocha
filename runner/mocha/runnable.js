@@ -39,12 +39,7 @@ Runnable.prototype.run = function (fn) {
     }
     emitted = true;
     var msg = 'done() called multiple times';
-    if (err && err.message) {
-      err.message += " (and Mocha's " + msg + ')';
-      self.emit('error', err);
-    } else {
-      self.emit('error', new Error(msg));
-    }
+    self.emit('error', new Error(msg));
   }
 
   // finished
@@ -64,13 +59,31 @@ Runnable.prototype.run = function (fn) {
   // explicit async with `done` argument
 
   // sync or promise-returning
-  callFn(this.fn);
+  try {
+    callFn(this.fn);
+  } catch (err) {
+    emitted = true;
+    done(Runnable.toValueOrError(err));
+  }
 
   function callFn(fn) {
     var result = fn.call(ctx);
     done();
   }
 };
+
+Runnable.toValueOrError = function (value) {
+  return (
+    value ||
+    new Error(
+      'Runnable failed with falsy or undefined exception. Please throw an Error instead.'
+    )
+  );
+};
+Runnable.constants = {
+  STATE_FAILED: 'failed',
+  STATE_PASSED: 'passed',
+}
 
 util.inherits(Runnable, EventEmitter);
 

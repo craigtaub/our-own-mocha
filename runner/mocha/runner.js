@@ -1,6 +1,7 @@
 const util = require("util");
 const EventEmitter = require("events").EventEmitter;
 const Suite = require("./suite");
+const Runnable = require("./runnable");
 
 // given run of a suite uses a runner. instance of runnable
 // keep record of current pass/fails + suites + tests
@@ -43,7 +44,13 @@ Runner.prototype.runTests = function (suite, fn) {
       self.currentRunnable = self.test;
       self.runTest(function (err) {
         test = self.test;
-        test.state = Runner.constants.STATE_PASSED;
+        if (err) {
+          self.fail(test, err);
+          self.emit(Runner.constants.EVENT_TEST_END, test);
+          return self.hookUp(Suite.constants.HOOK_TYPE_AFTER_EACH, next);
+        }
+
+        test.state = Runnable.constants.STATE_PASSED;
         self.emit(Runner.constants.EVENT_TEST_PASS, test);
         self.emit(Runner.constants.EVENT_TEST_END, test);
         self.hookUp(Suite.constants.HOOK_TYPE_AFTER_EACH, next);
@@ -236,6 +243,32 @@ Runner.prototype.hooks = function (name, suites, fn) {
   }
 
   next(suites.pop());
+};
+
+Runner.prototype.fail = function (test, err, force) {
+  ++this.failures;
+  test.state = Runnable.constants.STATE_FAILED;
+  function thrown2Error(err) {
+    return new Error(
+      'the (some type) ' + stringify(err) + ' was thrown, throw an Error :)'
+    );
+  }
+
+  function isError(err) {
+    return err instanceof Error || (err && typeof err.message === 'string');
+  }
+  if (!isError(err)) {
+    err = thrown2Error(err);
+  }
+
+  try {
+    err.stack =
+      this.fullStackTrace || !err.stack ? err.stack : stackFilter(err.stack);
+  } catch (ignore) {
+    // some environments do not take kindly to monkeying with the stack
+  }
+
+  this.emit(Runner.constants.EVENT_TEST_FAIL, test, err);
 };
 
 Runner.constants = {
