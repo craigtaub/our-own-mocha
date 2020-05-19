@@ -1,62 +1,65 @@
 # our-own-mocha
 
 - CJS as core does not support ESM natively yet.
-- accepts ESM for test files.
+- Accepts ESM for test files.
 
 ## Features
 
-- suites + tests
-- hooks
-- reporter + ui
-- NO: timers, slow
+- Suites + tests
+- Hooks
+- Reporter + ui
+- IGNORED: timers, slow
 
 ## 3 parts to our /runner
 
 ### 1. Mocha
 
-- entities required for a test runner 
+- Entities required for a test runner 
 
 ### 2. Parsing phase
 
-- goal to build a coherent CLI
-- found in `lib/cli`
-- uses Prototype so can chain in ES5-friendly way
+- Goal to build a coherent CLI
+- Found in Mochas `lib/cli`
+- Uses Prototype so can chain in ES5-friendly way
 
 ### 3. Execution phase
 
-- relies on mocha instance from parsing phase
-- creates instance of a Runnable
+- Relies on mocha instance from parsing phase
+- Creates instance of a Runnable
 
 ## Runner steps
 
 ### Parsing phase
 
-- create a yars instance and attach commands
-- uses a child yargs instance for options and checks
-- runs validation inside a part of these checks
-- if passes above build mocha instance + hands to next phase
+- Create a yars instance and attach commands
+- Uses a child yargs instance for options and checks
+- Runs validation inside a part of these checks
+- If passes above build mocha instance + hands to next phase
 
 #### Build mocha instance
 
-- creates instance of an empty Suite and attaches to "this.suite"
-- creates instance of a Reporter and attaches "this.reporter" (a function "Spec")
-- based on Interface, binds suite events onto our "this.suite".
-  - events are used to bind UI methods to the suite context.
-  - HOW? each listener is given the params "context", "file" and our "mocha" instance
-  - So on("EVENT_FILE_PRE_REQUIRE") => context.after = ... context.describe = ... context.it = ...
-  - "describe()" creates and returns a new suite via "suite.create"
-  - "it()" creates and returns a new Test via "new Test"
+- Creates instance of an empty Suite and attaches to `this.suite`
+- Creates instance of a Reporter and attaches `this.reporter` (e.g. a function `Spec`)
+- Based on Interface, binds suite events onto our `this.suite`.
+  - Events are used to bind UI methods to the suite context.
+
+##### How does the Interface work with our Mocha instance?
+
+- Each listener is given the params `context`, `file` and our `mocha` instance
+- So `on("EVENT_FILE_PRE_REQUIRE")` => `context.after = ...`, `context.describe = ...`,  `context.it = ...`
+- `describe()` creates and returns a new `Suite` via `suite.create()`
+- `it()` creates and returns a new `Test` via `new Test()`
 
 ### Execution phase
 
-- build single array of all files to run
-- load ESM and CJS files async, emitting event before/after file required
-- run mocha instance
+- Build single array of all files to run
+- Load ESM and CJS files async, emitting event before/after file required
+- Run our mocha instance
 
-### Mocha.run instance
+#### mocha.run 
 
-- create instance of a Runner, add stats collecting
-- create instance of a Reporter from the Runner
+- Create instance of a `Runner`, add stats collecting
+- Create instance of a Reporter via `new this._reporter(runner)` using the `Runner`
 
 ## Scripts
 
