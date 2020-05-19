@@ -3,6 +3,13 @@
 - CJS as core does not support ESM natively yet.
 - accepts ESM for test files.
 
+## Features
+
+- suites + tests
+- hooks
+- reporter + ui
+- NO: timers, slow
+
 ## 3 parts:
 
 ### 1. Mocha

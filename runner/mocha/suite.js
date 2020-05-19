@@ -16,19 +16,7 @@ function Suite(title, parentContext, isRoot) {
   this._afterEach = [];
   this._afterAll = [];
   this.root = isRoot === true;
-  this._timeout = 2000;
 }
-Suite.prototype.timeout = function (ms) {
-  if (!arguments.length) {
-    return this._timeout;
-  }
-  if (typeof ms === 'string') {
-    ms = milliseconds(ms);
-  }
-
-  this._timeout = parseInt(ms, 10);
-  return this;
-};
 Suite.prototype.fullTitle = function () {
   return this.titlePath().join(' ');
 };
@@ -45,7 +33,6 @@ Suite.prototype.titlePath = function () {
 Suite.prototype.addSuite = function (suite) {
   suite.parent = this;
   suite.root = false;
-  suite.timeout(this.timeout());
   this.suites.push(suite);
   this.emit(Suite.constants.EVENT_SUITE_ADD_SUITE, suite);
   return this;
@@ -84,7 +71,6 @@ Suite.prototype.getHooks = function getHooks(name) {
 Suite.prototype._createHook = function (title, fn) {
   var hook = new Hook(title, fn);
   hook.parent = this;
-  hook.timeout(this.timeout());
   hook.ctx = this.ctx;
   hook.file = this.file;
   return hook;

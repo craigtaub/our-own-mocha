@@ -8,11 +8,4 @@ Context.prototype.runnable = function (runnable) {
   this.test = this._runnable = runnable;
   return this;
 };
-Context.prototype.timeout = function (ms) {
-  if (!arguments.length) {
-    return this.runnable().timeout();
-  }
-  this.runnable().timeout(ms);
-  return this;
-};
 module.exports = Context;

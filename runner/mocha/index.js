@@ -51,7 +51,6 @@ const defaults = {
   diff: true,
   extension: ['js', 'cjs', 'mjs'],
   reporter: 'spec',
-  timeout: 2000,
   ui: 'bdd',
 }
 
@@ -65,7 +64,6 @@ function Mocha(options) {
 
   this.ui(options.ui)
     .reporter(options.reporter)
-  this.timeout(options.timeout === false ? 0 : options.timeout);
 }
 // Sets test UI `name`, defaults to "bdd".
 Mocha.prototype.ui = function (ui) {
@@ -94,10 +92,6 @@ Mocha.prototype.reporter = function (reporter) {
   // Try to load reporters from process.cwd() and node_modules
 
   this._reporter = _reporter;
-  return this;
-};
-Mocha.prototype.timeout = function (msecs) {
-  this.suite.timeout(msecs);
   return this;
 };
 // -> lib/reporters.js -> base/spec

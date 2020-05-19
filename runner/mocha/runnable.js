@@ -10,7 +10,6 @@ function Runnable(title, fn) {
   this.body = (fn || '').toString();
   this.async = fn && fn.length;
   this.sync = !this.async;
-  this._timeout = 2000;
   this.timedOut = false;
 }
 Runnable.prototype.fullTitle = function () {
@@ -19,17 +18,6 @@ Runnable.prototype.fullTitle = function () {
 
 Runnable.prototype.titlePath = function () {
   return this.parent.titlePath().concat([this.title]);
-};
-Runnable.prototype.timeout = function (ms) {
-  if (!arguments.length) {
-    return this._timeout;
-  }
-  if (typeof ms === 'string') {
-    ms = milliseconds(ms);
-  }
-
-  this._timeout = parseInt(ms, 10);
-  return this;
 };
 
 Runnable.prototype.run = function (fn) {
@@ -61,17 +49,12 @@ Runnable.prototype.run = function (fn) {
 
   // finished
   function done(err) {
-    var ms = self.timeout();
-
     if (finished) {
       return multiple(err);
     }
 
     self.duration = new Date() - start;
     finished = true;
-    if (!err && self.duration > ms && ms > 0) {
-      err = self._timeoutError(ms);
-    }
     fn(err);
   }
 

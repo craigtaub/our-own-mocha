@@ -10,7 +10,6 @@ const parsingPhase = (runMocha) => {
     diff: true,
     extension: ['js', 'cjs', 'mjs'],
     reporter: 'spec',
-    timeout: 2000,
     ui: 'bdd',
   }
 
@@ -27,10 +26,6 @@ const parsingPhase = (runMocha) => {
           default: defaults.reporter,
           description: 'Specify reporter to use',
           requiresArg: true
-        },
-        timeout: {
-          default: defaults.timeout,
-          description: 'Specify test timeout threshold (in milliseconds)',
         },
         ui: {
           default: defaults.ui,
