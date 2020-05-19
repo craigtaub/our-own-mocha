@@ -1,0 +1,20 @@
+{
+  "name": "test-runner",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "help": "node runner/index.js --help",
+    "test": "node runner/index.js test/*.test.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "glob": "^7.1.6",
+    "minimatch": "^3.0.4",
+    "ms": "^2.1.2",
+    "util": "^0.12.3",
+    "yargs": "^15.3.1",
+    "yargs-parser": "^18.1.3"
+  }
+}
