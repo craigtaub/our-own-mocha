@@ -1,6 +1,7 @@
 # our-own-mocha
 
 - CJS as core does not support ESM natively yet.
+- accepts ESM for test files.
 
 ## 3 parts:
 
@@ -17,6 +18,7 @@
 ### 3. Execution phase
 
 - relies on mocha instance from parsing phase
+- creates instance of a Runnable
 
 ## Scripts
 

@@ -9,11 +9,12 @@ function Test(title, fn) {
   this.pending = !fn;
   this.type = 'test';
 }
+
 util.inherits(Test, Runnable);
+
 Test.prototype.clone = function () {
   var test = new Test(this.title, this.fn);
   test.timeout(this.timeout());
-  test.globals(this.globals());
   test.parent = this.parent;
   test.file = this.file;
   test.ctx = this.ctx;

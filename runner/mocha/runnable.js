@@ -16,9 +16,11 @@ function Runnable(title, fn) {
 Runnable.prototype.fullTitle = function () {
   return this.titlePath().join(' ');
 };
+
 Runnable.prototype.titlePath = function () {
   return this.parent.titlePath().concat([this.title]);
 };
+
 util.inherits(Runnable, EventEmitter);
 
 module.exports = Runnable;

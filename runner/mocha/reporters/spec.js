@@ -39,21 +39,12 @@ function Spec(runner, options) {
   });
 
   runner.on(Runner.constants.EVENT_TEST_PASS, function (test) {
-    var fmt;
-    if (test.speed === 'fast') {
-      fmt =
-        indent() +
-        color('checkmark', '  ' + Base.symbols.ok) +
-        color('pass', ' %s');
-      Base.consoleLog(fmt, test.title);
-    } else {
-      fmt =
-        indent() +
-        color('checkmark', '  ' + Base.symbols.ok) +
-        color('pass', ' %s') +
-        color(test.speed, ' (%dms)');
-      Base.consoleLog(fmt, test.title, test.duration);
-    }
+    var fmt =
+      indent() +
+      color('checkmark', '  ' + Base.symbols.ok) +
+      color('pass', ' %s') +
+      color(test.speed, ' (%dms)');
+    Base.consoleLog(fmt, test.title, test.duration);
   });
 
   runner.on(Runner.constants.EVENT_TEST_FAIL, function (test) {

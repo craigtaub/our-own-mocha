@@ -39,10 +39,6 @@ var color = function (type, str) {
 };
 function Base(runner, options) {
   var failures = (this.failures = []);
-
-  if (!runner) {
-    throw new TypeError('Missing runner argument');
-  }
   this.options = options || {};
   this.runner = runner;
   this.stats = runner.stats; // assigned so Reporters keep a closer reference
@@ -52,9 +48,6 @@ function Base(runner, options) {
   });
 
   runner.on(Runner.constants.EVENT_TEST_FAIL, function (test, err) {
-    if (showDiff(err)) {
-      stringifyDiffObjs(err);
-    }
     // more than one error per test
     if (test.err && err instanceof Error) {
       test.err.multiple = (test.err.multiple || []).concat(err);

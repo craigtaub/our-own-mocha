@@ -8,19 +8,13 @@ async function runMocha(mocha, options) {
   const {
     extension = ['js', 'cjs', 'mjs'],
     exit = false,
-    ignore = [],
     file = [],
-    recursive = false,
-    sort = false,
     spec = [],
   } = options;
 
   const fileCollectParams = {
-    ignore,
     extension,
     file,
-    recursive,
-    sort,
     spec
   };
 
@@ -52,52 +46,17 @@ function collectFiles({ ignore, extension, file, recursive, sort, spec } = {}) {
   const unmatched = [];
   spec.forEach(arg => {
     let newFiles;
-    try {
-      newFiles = lookupFiles(arg, extension, recursive);
-    } catch (err) {
-      if (err.code === 'ERR_MOCHA_NO_FILES_MATCH_PATTERN') {
-        unmatched.push({ message: err.message, pattern: err.pattern });
-        return;
-      }
-
-      throw err;
-    }
-
-    if (typeof newFiles !== 'undefined') {
-      if (typeof newFiles === 'string') {
-        newFiles = [newFiles];
-      }
-      newFiles = newFiles.filter(fileName =>
-        ignore.every(pattern => !minimatch(fileName, pattern))
-      );
-    }
-
+    newFiles = lookupFiles(arg, extension, recursive);
     files = files.concat(newFiles);
   });
 
   const fileArgs = file.map(filepath => path.resolve(filepath));
-  files = files.map(filepath => path.resolve(filepath));
-
-  // ensure we don't sort the stuff from fileArgs; order is important!
-  if (sort) {
-    files.sort();
-  }
 
   // add files given through --file to be ran first
   files = fileArgs.concat(files);
   if (!files.length) {
-    // give full message details when only 1 file is missing
-    const noneFoundMsg =
-      unmatched.length === 1
-        ? `Error: No test files found: ${JSON.stringify(unmatched[0].pattern)}` // stringify to print escaped characters raw
-        : 'Error: No test files found';
-    console.error(noneFoundMsg);
+    console.error('Error: No test files found');
     process.exit(1);
-  } else {
-    // print messages as an warning
-    unmatched.forEach(warning => {
-      console.warn(`Warning: ${warning.message}`);
-    });
   }
 
   return files;
@@ -106,85 +65,23 @@ function collectFiles({ ignore, extension, file, recursive, sort, spec } = {}) {
 // lib/utils.js
 function lookupFiles(filepath, extensionnoneFoundMsgs, recursive) {
   let extensions = ['js', 'cjs', 'mjs'];
-  function hasMatchingExtname(pathname, exts) {
-    var suffix = path.extname(pathname).slice(1);
-    return exts.some(function (element) {
-      return suffix === element;
-    });
-  }
-  function isHiddenOnUnix(pathname) {
-    return path.basename(pathname)[0] === '.';
-  }
-
-  extensions = extensions || [];
-  recursive = recursive || false;
   var files = [];
   var stat;
 
   if (!fs.existsSync(filepath)) {
     var pattern;
-    if (glob.hasMagic(filepath)) {
-      // Handle glob as is without extensions
-      pattern = filepath;
-    } else {
-      // glob pattern e.g. 'filepath+(.js|.ts)'
-      var strExtensions = extensions
-        .map(function (v) {
-          return '.' + v;
-        })
-        .join('|');
-      pattern = filepath + '+(' + strExtensions + ')';
-    }
+    pattern = filepath;
     files = glob.sync(pattern, { nodir: true });
-    if (!files.length) {
-      throw new Error('Cannot find any files matching pattern ' + filepath);
-    }
     return files;
   }
 
   // Handle file
-  try {
-    stat = fs.statSync(filepath);
-    if (stat.isFile()) {
-      return filepath;
-    }
-  } catch (err) {
-    // ignore error
-    return;
+  stat = fs.statSync(filepath);
+  if (stat.isFile()) {
+    return filepath;
   }
 
   // Handle directory
-  fs.readdirSync(filepath).forEach(function (dirent) {
-    var pathname = path.join(filepath, dirent);
-    var stat;
-
-    try {
-      stat = fs.statSync(pathname);
-      if (stat.isDirectory()) {
-        if (recursive) {
-          files = files.concat(lookupFiles(pathname, extensions, recursive));
-        }
-        return;
-      }
-    } catch (err) {
-      // ignore error
-      return;
-    }
-    if (!extensions.length) {
-      throw new Error('Argument %s required when argument %s is a directory');
-    }
-
-    if (
-      !stat.isFile() ||
-      !hasMatchingExtname(pathname, extensions) ||
-      isHiddenOnUnix(pathname)
-    ) {
-      return;
-    }
-    files.push(pathname);
-  });
-
-  return files;
 };
 
 module.exports = runMocha;
