@@ -19,6 +19,7 @@
 ### 2. Parsing phase
 
 - Goal to build a coherent CLI
+- Makes use of `yargs`
 - Found in Mochas `lib/cli`
 - Uses Prototype so can chain in ES5-friendly way
 
@@ -31,14 +32,14 @@
 
 ### Parsing phase
 
-- Create a yars instance and attach commands
-- Uses a child yargs instance for options and checks
+- Create a `yars` instance and attach commands
+- Uses a child `yargs` instance for options and checks
 - Runs validation inside a part of these checks
 - If passes above build mocha instance + hands to next phase
 
 #### Build mocha instance
 
-- Creates instance of an empty Suite and attaches to `this.suite`
+- Creates instance of our Root Suite and attaches to `this.suite`
 - Creates instance of a Reporter and attaches `this.reporter` (e.g. a function `Spec`)
 - Based on Interface, binds suite events onto our `this.suite`.
   - Events are used to bind UI methods to the suite context.
@@ -54,12 +55,21 @@
 
 - Build single array of all files to run
 - Load ESM and CJS files async, emitting event before/after file required
-- Run our mocha instance
+   - NOTE: test files run now building (a) tests onto a suite and (b) suites onto the root suite
+- Run our mocha instance via `mocha.run`
 
 #### mocha.run 
 
 - Create instance of a `Runner`, add stats collecting
 - Create instance of a Reporter via `new this._reporter(runner)` using the `Runner`
+- trigger `runner.run`
+
+##### runner.run?
+
+- inside the `Runner` 
+- emits `EVENT_RUN_BEGIN` and the `EVENT_SUITE_BEGIN` events 
+- executes each suite on root suite
+- for each suite run all tests
 
 ## Scripts
 

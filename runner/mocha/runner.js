@@ -85,7 +85,6 @@ Runner.prototype.runSuite = function (suite, fn) {
   var i = 0;
   var self = this;
   var total = this.grepTotal(suite);
-
   if (!total || (self.failures && suite._bail)) {
     return fn();
   }
