@@ -1,103 +1,50 @@
 const yargs = require("yargs");
 const yargsParser = require("yargs-parser");
 const Mocha = require("../mocha");
-const validatePlugin = require("./run-helpers").validatePlugin;
-const handleRequires = require("./run-helpers").handleRequires;
 
 // 1. Parsing phase
 const parsingPhase = (runMocha) => {
-
-  // lib/cli/options.js
-  const YARGS_PARSER_CONFIG = {
-    'combine-arrays': true,
-    'short-option-groups': false,
-    'dot-notation': false
-  };
 
   // lib/mocharc.json
   const defaults = {
     diff: true,
     extension: ['js', 'cjs', 'mjs'],
-    package: './package.json',
     reporter: 'spec',
     timeout: 2000,
     ui: 'bdd',
-    'watch-ignore': ['node_modules', '.git'],
-    R: 'spec',
-    s: 75,
-    t: 2000,
-    timeouts: 2000,
-    u: 'bdd'
   }
-
-
-  // lib/cli/options loadOptions()
-  const loadOptions = (argv = []) => {
-    const parse = (args = []) => {
-      const result = yargsParser.detailed(args);
-      if (result.error) {
-        console.error(`Error: ${result.error.message}`);
-        process.exit(1);
-      }
-      return result.argv;
-    };
-    let args = parse(argv);
-    // make unique
-    args._ = Array.from(new Set(args._));
-    return args;
-  };
 
   // lib/cli/commands.js -> lib/cli/run.js
   const builder = (yargs) => {
     // cli/run.js builder()
-    // Logical option groups
-    const GROUPS = {
-      FILES: 'File Handling',
-      FILTERS: 'Test Filters',
-      NODEJS: 'Node.js & V8',
-      OUTPUT: 'Reporting & Output',
-      RULES: 'Rules & Behavior',
-      CONFIG: 'Configuration'
-    };
     return yargs
       .options({
         config: {
           config: true,
-          defaultDescription: '(nearest rc file)',
           description: 'Path to config file',
-          group: GROUPS.CONFIG
         },
         reporter: {
           default: defaults.reporter,
           description: 'Specify reporter to use',
-          group: GROUPS.OUTPUT,
-          requiresArg: true
-        },
-        require: {
-          defaultDescription: '(none)',
-          description: 'Require module',
-          group: GROUPS.FILES,
           requiresArg: true
         },
         timeout: {
           default: defaults.timeout,
           description: 'Specify test timeout threshold (in milliseconds)',
-          group: GROUPS.RULES
         },
         ui: {
           default: defaults.ui,
           description: 'Specify user interface',
-          group: GROUPS.RULES,
           requiresArg: true
         }
       })
       .check(argv => {
-        // load requires first, because it can impact "plugin" validation
-        handleRequires(argv.require);
+        // lib/cli/run-helpers.js handleRequires
+        // load --requires first, because it can impact "plugin" validation
 
-        // validate reporter + ui
-        validatePlugin(argv, 'reporter', Mocha.reporters);
-        validatePlugin(argv, 'ui', Mocha.interfaces);
+        // lib/cli/run-helpers.js validatePlugin
+        // validate `--reporter` and `--ui`.  Ensures there's only one, and asserts that it actually exists
+        // Checks keys on Mocha.reporters + Mocha.interfaces
 
         return true;
       });
@@ -123,8 +70,11 @@ const parsingPhase = (runMocha) => {
   }
 
   // lib cli/cli.js main()
-  const argv = process.argv.slice(2)
-  var args = loadOptions(argv);
+  const argv = process.argv.slice(2);
+  // lib/cli/options loadOptions()
+  var args = yargsParser.detailed(argv).argv;
+  args._ = Array.from(new Set(args._));
+
   yargs()
     .scriptName('our_mocha')
     .command(commands.run)
@@ -148,7 +98,6 @@ const parsingPhase = (runMocha) => {
       Here: ...
       `
     )
-    .parserConfiguration(YARGS_PARSER_CONFIG)
     .config(args)
     .parse(args._);
 }
