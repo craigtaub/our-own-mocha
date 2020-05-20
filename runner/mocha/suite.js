@@ -6,7 +6,7 @@ const Hook = require("./hook");
 // lib/suite.js
 function Suite(title, parentContext, isRoot) {
   this.title = title;
-  function Context() { }
+  function Context() {}
   Context.prototype = parentContext;
   this.ctx = new Context();
   this.suites = [];
@@ -18,7 +18,7 @@ function Suite(title, parentContext, isRoot) {
   this.root = isRoot === true;
 }
 Suite.prototype.fullTitle = function () {
-  return this.titlePath().join(' ');
+  return this.titlePath().join(" ");
 };
 Suite.prototype.titlePath = function () {
   var result = [];
@@ -66,7 +66,7 @@ Suite.prototype.eachTest = function (fn) {
   return this;
 };
 Suite.prototype.getHooks = function getHooks(name) {
-  return this['_' + name];
+  return this["_" + name];
 };
 Suite.prototype._createHook = function (title, fn) {
   var hook = new Hook(title, fn);
@@ -78,7 +78,7 @@ Suite.prototype._createHook = function (title, fn) {
 Suite.prototype.beforeEach = function (title, fn) {
   fn = title;
   title = fn.name;
-  title = '"before each" hook' + (title ? ': ' + title : '');
+  title = '"before each" hook' + (title ? ": " + title : "");
   var hook = this._createHook(title, fn);
   this._beforeEach.push(hook);
   this.emit(Suite.constants.EVENT_SUITE_ADD_HOOK_BEFORE_EACH, hook);
@@ -88,7 +88,7 @@ Suite.prototype.beforeEach = function (title, fn) {
 Suite.prototype.afterEach = function (title, fn) {
   fn = title;
   title = fn.name;
-  title = '"after each" hook' + (title ? ': ' + title : '');
+  title = '"after each" hook' + (title ? ": " + title : "");
   var hook = this._createHook(title, fn);
   this._afterEach.push(hook);
   this.emit(Suite.constants.EVENT_SUITE_ADD_HOOK_AFTER_EACH, hook);
@@ -97,7 +97,7 @@ Suite.prototype.afterEach = function (title, fn) {
 Suite.prototype.beforeAll = function (title, fn) {
   fn = title;
   title = fn.name;
-  title = '"before all" hook' + (title ? ': ' + title : '');
+  title = '"before all" hook' + (title ? ": " + title : "");
 
   var hook = this._createHook(title, fn);
   this._beforeAll.push(hook);
@@ -107,7 +107,7 @@ Suite.prototype.beforeAll = function (title, fn) {
 Suite.prototype.afterAll = function (title, fn) {
   fn = title;
   title = fn.name;
-  title = '"after all" hook' + (title ? ': ' + title : '');
+  title = '"after all" hook' + (title ? ": " + title : "");
 
   var hook = this._createHook(title, fn);
   this._afterAll.push(hook);
@@ -119,20 +119,20 @@ Suite.prototype.afterAll = function (title, fn) {
 util.inherits(Suite, EventEmitter);
 // Events
 Suite.constants = {
-  EVENT_FILE_POST_REQUIRE: 'post-require',
-  EVENT_FILE_PRE_REQUIRE: 'pre-require',
-  EVENT_FILE_REQUIRE: 'require',
-  EVENT_ROOT_SUITE_RUN: 'run',
-  HOOK_TYPE_AFTER_ALL: 'afterAll',
-  HOOK_TYPE_AFTER_EACH: 'afterEach',
-  HOOK_TYPE_BEFORE_ALL: 'beforeAll',
-  HOOK_TYPE_BEFORE_EACH: 'beforeEach',
-  EVENT_SUITE_ADD_HOOK_AFTER_ALL: 'afterAll',
-  EVENT_SUITE_ADD_HOOK_AFTER_EACH: 'afterEach',
-  EVENT_SUITE_ADD_HOOK_BEFORE_ALL: 'beforeAll',
-  EVENT_SUITE_ADD_HOOK_BEFORE_EACH: 'beforeEach',
-  EVENT_SUITE_ADD_SUITE: 'suite',
-  EVENT_SUITE_ADD_TEST: 'test'
-}
+  EVENT_FILE_POST_REQUIRE: "post-require",
+  EVENT_FILE_PRE_REQUIRE: "pre-require",
+  EVENT_FILE_REQUIRE: "require",
+  EVENT_ROOT_SUITE_RUN: "run",
+  HOOK_TYPE_AFTER_ALL: "afterAll",
+  HOOK_TYPE_AFTER_EACH: "afterEach",
+  HOOK_TYPE_BEFORE_ALL: "beforeAll",
+  HOOK_TYPE_BEFORE_EACH: "beforeEach",
+  EVENT_SUITE_ADD_HOOK_AFTER_ALL: "afterAll",
+  EVENT_SUITE_ADD_HOOK_AFTER_EACH: "afterEach",
+  EVENT_SUITE_ADD_HOOK_BEFORE_ALL: "beforeAll",
+  EVENT_SUITE_ADD_HOOK_BEFORE_EACH: "beforeEach",
+  EVENT_SUITE_ADD_SUITE: "suite",
+  EVENT_SUITE_ADD_TEST: "test",
+};
 
 module.exports = Suite;

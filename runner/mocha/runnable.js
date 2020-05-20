@@ -7,13 +7,13 @@ const Suite = require("./suite");
 function Runnable(title, fn) {
   this.title = title;
   this.fn = fn;
-  this.body = (fn || '').toString();
+  this.body = (fn || "").toString();
   this.async = fn && fn.length;
   this.sync = !this.async;
   this.timedOut = false;
 }
 Runnable.prototype.fullTitle = function () {
-  return this.titlePath().join(' ');
+  return this.titlePath().join(" ");
 };
 
 Runnable.prototype.titlePath = function () {
@@ -38,8 +38,8 @@ Runnable.prototype.run = function (fn) {
       return;
     }
     emitted = true;
-    var msg = 'done() called multiple times';
-    self.emit('error', new Error(msg));
+    var msg = "done() called multiple times";
+    self.emit("error", new Error(msg));
   }
 
   // finished
@@ -76,14 +76,14 @@ Runnable.toValueOrError = function (value) {
   return (
     value ||
     new Error(
-      'Runnable failed with falsy or undefined exception. Please throw an Error instead.'
+      "Runnable failed with falsy or undefined exception. Please throw an Error instead."
     )
   );
 };
 Runnable.constants = {
-  STATE_FAILED: 'failed',
-  STATE_PASSED: 'passed',
-}
+  STATE_FAILED: "failed",
+  STATE_PASSED: "passed",
+};
 
 util.inherits(Runnable, EventEmitter);
 

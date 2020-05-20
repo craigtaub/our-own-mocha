@@ -14,7 +14,7 @@
 
 ### 1. Mocha
 
-- Entities required for a test runner 
+- Entities required for a test runner
 
 ### 2. Parsing phase
 
@@ -47,7 +47,7 @@
 ##### How does the Interface work with our Mocha instance?
 
 - Each listener is given the params `context`, `file` and our `mocha` instance
-- So `on("EVENT_FILE_PRE_REQUIRE")` => `context.after = ...`, `context.describe = ...`,  `context.it = ...`
+- So `on("EVENT_FILE_PRE_REQUIRE")` => `context.after = ...`, `context.describe = ...`, `context.it = ...`
 - `describe()` creates and returns a new `Suite` via `suite.create()`
 - `it()` creates and returns a new `Test` via `new Test()`
 
@@ -55,13 +55,13 @@
 
 - Build single array of all files to run
 - Load ESM and CJS files async, emitting event before/after file required
-   - NOTE: test files run now building 
-   - (a) hooks onto suite
-   - (b) tests onto a suite 
-   - (c) suites onto the root suite
+  - NOTE: test files run now building
+  - (a) hooks onto suite
+  - (b) tests onto a suite
+  - (c) suites onto the root suite
 - Run our mocha instance via `mocha.run`
 
-#### mocha.run 
+#### mocha.run
 
 - Create instance of a `Runner`, add stats collecting
   - on events pass/fail/end etc increment stats property
@@ -70,8 +70,8 @@
 
 #### runner.run
 
-- inside the `Runner` 
-- emits `EVENT_RUN_BEGIN` and the `EVENT_SUITE_BEGIN` events 
+- inside the `Runner`
+- emits `EVENT_RUN_BEGIN` and the `EVENT_SUITE_BEGIN` events
 - executes each suite on root suite
 - for each suite run all tests
 

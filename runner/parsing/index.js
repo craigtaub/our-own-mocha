@@ -4,7 +4,6 @@ const Mocha = require("../mocha");
 const defaults = require("../mocha/defaults");
 
 const parsingPhase = (runMocha) => {
-
   // lib/cli/commands.js -> lib/cli/run.js
   const builder = (yargs) => {
     // cli/run.js builder()
@@ -12,20 +11,20 @@ const parsingPhase = (runMocha) => {
       .options({
         config: {
           config: true,
-          description: 'Path to config file',
+          description: "Path to config file",
         },
         reporter: {
           default: defaults.reporter,
-          description: 'Specify reporter to use',
-          requiresArg: true
+          description: "Specify reporter to use",
+          requiresArg: true,
         },
         ui: {
           default: defaults.ui,
-          description: 'Specify user interface',
-          requiresArg: true
-        }
+          description: "Specify user interface",
+          requiresArg: true,
+        },
       })
-      .check(argv => {
+      .check((argv) => {
         // lib/cli/run-helpers.js handleRequires
         // load --requires first, because it can impact "plugin" validation
 
@@ -35,7 +34,7 @@ const parsingPhase = (runMocha) => {
 
         return true;
       });
-  }
+  };
   const handler = async function (argv) {
     const mocha = new Mocha(argv);
 
@@ -43,18 +42,18 @@ const parsingPhase = (runMocha) => {
       // NEXT PHASE
       await runMocha(mocha, argv);
     } catch (err) {
-      console.error('\n' + (err.stack || `Error: ${err.message || err}`));
+      console.error("\n" + (err.stack || `Error: ${err.message || err}`));
       process.exit(1);
     }
-  }
+  };
   const commands = {
     run: {
-      command: ['$0 [spec..]', 'inspect'],
-      describe: 'Run tests with Our-Mocha',
+      command: ["$0 [spec..]", "inspect"],
+      describe: "Run tests with Our-Mocha",
       builder,
-      handler
-    }
-  }
+      handler,
+    },
+  };
 
   // lib cli/cli.js main()
   const argv = process.argv.slice(2);
@@ -63,19 +62,19 @@ const parsingPhase = (runMocha) => {
   args._ = Array.from(new Set(args._));
 
   yargs()
-    .scriptName('our_mocha')
+    .scriptName("our_mocha")
     .command(commands.run)
     .fail((msg, err, yargs) => {
       yargs.showHelp();
-      const message = msg || err.message
+      const message = msg || err.message;
       console.error(`\nERROR: ${message}`);
       process.exit(1);
     })
-    .help('help', 'Show usage information & exit')
-    .version('version', 'Show version number & exit', "1.0")
-    .epilog('Mocha Resources: ...')
+    .help("help", "Show usage information & exit")
+    .version("version", "Show version number & exit", "1.0")
+    .epilog("Mocha Resources: ...")
     .config(args)
     .parse(args._);
-}
+};
 
-module.exports = parsingPhase;  // lib cli/cli.js main()
+module.exports = parsingPhase; // lib cli/cli.js main()

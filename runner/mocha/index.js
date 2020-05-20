@@ -13,11 +13,11 @@ function createStatsCollector(runner) {
     tests: 0,
     passes: 0,
     pending: 0,
-    failures: 0
+    failures: 0,
   };
 
   if (!runner) {
-    throw new TypeError('Missing runner argument');
+    throw new TypeError("Missing runner argument");
   }
 
   runner.stats = stats;
@@ -53,17 +53,16 @@ function Mocha(options) {
   this.options = options;
 
   // lib/context.js. empty context
-  function Context() { }
+  function Context() {}
   // root suite
-  this.suite = new Suite('', new Context(), true);
+  this.suite = new Suite("", new Context(), true);
 
-  this.ui(options.ui)
-    .reporter(options.reporter)
+  this.ui(options.ui).reporter(options.reporter);
 }
 // Sets test UI `name`, defaults to "bdd".
 Mocha.prototype.ui = function (ui) {
   var bindInterface;
-  ui = ui || 'bdd';
+  ui = ui || "bdd";
   bindInterface = Mocha.interfaces[ui];
   bindInterface(this.suite);
 
@@ -80,7 +79,7 @@ Mocha.prototype.ui = function (ui) {
 };
 Mocha.prototype.reporter = function (reporter) {
   const builtinReporters = Mocha.reporters;
-  reporter = reporter || 'spec';
+  reporter = reporter || "spec";
   var _reporter;
   // Try to load a built-in reporter.
   _reporter = builtinReporters[reporter];
@@ -92,8 +91,8 @@ Mocha.prototype.reporter = function (reporter) {
 // -> lib/reporters.js -> base/spec
 Mocha.reporters = {
   base: Base,
-  spec: Spec
-}
+  spec: Spec,
+};
 // -> lib/interfaces/index.js -> tdd/bdd
 Mocha.interfaces = {
   // lib/interfaces/common.js
@@ -124,14 +123,18 @@ Mocha.interfaces = {
           suites.shift();
 
           return suite;
-        }
-      }
+        },
+      },
     };
   },
   bdd: function bddInterface(suite) {
     var suites = [suite];
 
-    suite.on(Suite.constants.EVENT_FILE_PRE_REQUIRE, function (context, file, mocha) {
+    suite.on(Suite.constants.EVENT_FILE_PRE_REQUIRE, function (
+      context,
+      file,
+      mocha
+    ) {
       var common = Mocha.interfaces.common(suites, context, mocha);
 
       context.before = common.before;
@@ -143,7 +146,7 @@ Mocha.interfaces = {
         return common.suite.create({
           title: title,
           file: file,
-          fn: fn
+          fn: fn,
         });
       };
 
@@ -155,14 +158,14 @@ Mocha.interfaces = {
         return test;
       };
     });
-  }
-}
+  },
+};
 // loads ESM (and CJS) test files asynchronously, then runs root suite
 Mocha.prototype.loadFilesAsync = function () {
   var self = this;
   var suite = this.suite;
 
-  const requireOrImport = async file => {
+  const requireOrImport = async (file) => {
     file = path.resolve(file);
     return require(file);
   };
@@ -204,6 +207,5 @@ Mocha.prototype.run = function (fn) {
 
   return runner.run(done);
 };
-
 
 module.exports = Mocha;

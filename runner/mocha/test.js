@@ -7,7 +7,7 @@ const Runnable = require("./runnable");
 function Test(title, fn) {
   Runnable.call(this, title, fn);
   this.pending = !fn;
-  this.type = 'test';
+  this.type = "test";
 }
 
 util.inherits(Test, Runnable);

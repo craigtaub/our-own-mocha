@@ -40,7 +40,10 @@ Runner.prototype.runTests = function (suite, fn) {
 
     // execute test and hook(s)
     self.emit(Runner.constants.EVENT_TEST_BEGIN, (self.test = test));
-    self.hookDown(Suite.constants.HOOK_TYPE_BEFORE_EACH, function (err, errSuite) {
+    self.hookDown(Suite.constants.HOOK_TYPE_BEFORE_EACH, function (
+      err,
+      errSuite
+    ) {
       self.currentRunnable = self.test;
       self.runTest(function (err) {
         test = self.test;
@@ -71,7 +74,7 @@ Runner.prototype.runTest = function (fn) {
   }
 
   var suite = this.parents().reverse()[0] || this.suite;
-  test.on('error', function (err) {
+  test.on("error", function (err) {
     self.fail(test, err);
   });
   try {
@@ -125,7 +128,7 @@ Runner.prototype.runSuite = function (suite, fn) {
 Runner.prototype.run = function (fn) {
   var self = this;
   var rootSuite = this.suite;
-  fn = fn || function () { };
+  fn = fn || function () {};
   function start() {
     self.started = true;
     self.emit(Runner.constants.EVENT_RUN_BEGIN);
@@ -245,12 +248,12 @@ Runner.prototype.fail = function (test, err, force) {
   test.state = Runnable.constants.STATE_FAILED;
   function thrown2Error(err) {
     return new Error(
-      'the (some type) ' + stringify(err) + ' was thrown, throw an Error :)'
+      "the (some type) " + stringify(err) + " was thrown, throw an Error :)"
     );
   }
 
   function isError(err) {
-    return err instanceof Error || (err && typeof err.message === 'string');
+    return err instanceof Error || (err && typeof err.message === "string");
   }
   if (!isError(err)) {
     err = thrown2Error(err);
@@ -267,20 +270,20 @@ Runner.prototype.fail = function (test, err, force) {
 };
 
 Runner.constants = {
-  EVENT_HOOK_BEGIN: 'hook',
-  EVENT_HOOK_END: 'hook end',
-  EVENT_RUN_BEGIN: 'start',
-  EVENT_DELAY_BEGIN: 'waiting',
-  EVENT_DELAY_END: 'ready',
-  EVENT_RUN_END: 'end',
-  EVENT_SUITE_BEGIN: 'suite',
-  EVENT_SUITE_END: 'suite end',
-  EVENT_TEST_BEGIN: 'test',
-  EVENT_TEST_END: 'test end',
-  EVENT_TEST_FAIL: 'fail',
-  EVENT_TEST_PASS: 'pass',
-  EVENT_TEST_PENDING: 'pending',
-  EVENT_TEST_RETRY: 'retry'
-}
+  EVENT_HOOK_BEGIN: "hook",
+  EVENT_HOOK_END: "hook end",
+  EVENT_RUN_BEGIN: "start",
+  EVENT_DELAY_BEGIN: "waiting",
+  EVENT_DELAY_END: "ready",
+  EVENT_RUN_END: "end",
+  EVENT_SUITE_BEGIN: "suite",
+  EVENT_SUITE_END: "suite end",
+  EVENT_TEST_BEGIN: "test",
+  EVENT_TEST_END: "test end",
+  EVENT_TEST_FAIL: "fail",
+  EVENT_TEST_PASS: "pass",
+  EVENT_TEST_PENDING: "pending",
+  EVENT_TEST_RETRY: "retry",
+};
 
 module.exports = Runner;
