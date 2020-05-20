@@ -55,21 +55,27 @@
 
 - Build single array of all files to run
 - Load ESM and CJS files async, emitting event before/after file required
-   - NOTE: test files run now building (a) tests onto a suite and (b) suites onto the root suite
+   - NOTE: test files run now building 
+   - (a) hooks onto suite
+   - (b) tests onto a suite 
+   - (c) suites onto the root suite
 - Run our mocha instance via `mocha.run`
 
 #### mocha.run 
 
 - Create instance of a `Runner`, add stats collecting
+  - on events pass/fail/end etc increment stats property
 - Create instance of a Reporter via `new this._reporter(runner)` using the `Runner`
 - trigger `runner.run`
 
-##### runner.run?
+#### runner.run
 
 - inside the `Runner` 
 - emits `EVENT_RUN_BEGIN` and the `EVENT_SUITE_BEGIN` events 
 - executes each suite on root suite
 - for each suite run all tests
+
+See `RUNNER_CALL_STACK.md` for full a more in-depth code walk-through.
 
 ## Scripts
 

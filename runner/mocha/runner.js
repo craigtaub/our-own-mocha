@@ -140,11 +140,7 @@ Runner.prototype.run = function (fn) {
   });
 
   // uncaught exception
-
-  // BELOW WORRYING !!! craig
-  // Runner.immediately(function () {
   start();
-  // });
 
   return this;
 };
