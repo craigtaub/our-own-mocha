@@ -64,8 +64,9 @@
 #### mocha.run
 
 - Create instance of a `Runner`, add stats collecting
-  - on events pass/fail/end etc increment stats property
-- Create instance of a Reporter via `new this._reporter(runner)` using the `Runner`
+  - on events increment pass/fail/end on `runner.stats`
+- Create instance of a `Reporter` via `new this._reporter(runner)` using the `Runner`
+  - on `EVENT_RUN_END` run `reporter.epilogue()` which prints stats found on `runner`
 - trigger `runner.run`
 
 #### runner.run
@@ -73,7 +74,7 @@
 - inside the `Runner`
 - emits `EVENT_RUN_BEGIN` and the `EVENT_SUITE_BEGIN` events
 - executes each suite on root suite
-- for each suite run all tests
+- for each suite run all tests and hooks
 
 See `RUNNER_CALL_STACK.md` for full a more in-depth code walk-through.
 
