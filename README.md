@@ -76,7 +76,7 @@
 - executes each suite on root suite
 - for each suite run all tests and hooks
 
-See [RUNNER_CALL_STACK.md](`RUNNER_CALL_STACK.md`) for full a more in-depth code walk-through.
+See [RUNNER_CALL_STACK.md](RUNNER_CALL_STACK.md) for full a more in-depth code walk-through.
 
 ## Scripts
 
