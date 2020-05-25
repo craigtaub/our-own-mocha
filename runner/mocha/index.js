@@ -66,15 +66,6 @@ Mocha.prototype.ui = function (ui) {
   bindInterface = Mocha.interfaces[ui];
   bindInterface(this.suite);
 
-  // this.suite.on(Suite.constants.EVENT_FILE_PRE_REQUIRE, function (context) {
-  //   exports.afterEach = context.afterEach;
-  //   exports.after = context.after;
-  //   exports.beforeEach = context.beforeEach;
-  //   exports.before = context.before;
-  //   exports.describe = context.describe;
-  //   exports.it = context.it;
-  // });
-
   return this;
 };
 Mocha.prototype.reporter = function (reporter) {
