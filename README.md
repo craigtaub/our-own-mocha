@@ -1,36 +1,60 @@
 # our-own-mocha
 
-- CJS as core does not support ESM natively yet.
-- Accepts ESM for test files.
+Contains just the core for the Mocha test runner to work.
 
 ## Features
 
-- Suites + tests
+- Suites and Tests
 - Hooks
-- Reporter + ui
-- IGNORED: timers, slow
+- Reporter and Interface
+
+### Terminology
+
+- `Test` - Test given code with an assertion
+- `Suite` - Collection of tests
+- `Hook` - Functions run at specific times in a test runners lifecycle
+- `Reporter` - How the output will be presented
+- `Interface` - Interface methods that will be use e.g. `describe` and `it` (alias UI)
+- `Runner` - A given run of a suite, tests, hooks, reporter etc (uses an instance of a `Runnable`)
+
+### Ignore in this repo
+
+Many core features will be ignored, including:
+
+- timeout management
+- slow test flagging
+- pending states
+
+## MochaJS modules
+
+Some details on the types of modules found inside Mocha.
+
+- Uses CJS module as core does not support ESM natively yet.
+- Accepts ESM for test files.
 
 ## 3 parts to our /runner
 
-### 1. Mocha
+### Mocha
 
 - Entities required for a test runner
+- Includes: Test, Suite, Hook, Reporter, Interface, Runner, Runnable
 
-### 2. Parsing phase
+### Parsing phase
 
-- Goal to build a coherent CLI
+_Goal_ to build a coherent CLI
+
 - Makes use of `yargs`
 - Found in Mochas `lib/cli`
 - Uses Prototype so can chain in ES5-friendly way
 
-### 3. Execution phase
+### Execution phase
 
 - Relies on mocha instance from parsing phase
 - Creates instance of a Runnable
 
-## Runner steps
+## 2 steps for the /runner
 
-### Parsing phase
+### 1. Parsing phase
 
 - Create a `yars` instance and attach commands
 - Uses a child `yargs` instance for options and checks
@@ -51,7 +75,7 @@
 - `describe()` creates and returns a new `Suite` via `suite.create()`
 - `it()` creates and returns a new `Test` via `new Test()`
 
-### Execution phase
+### 2. Execution phase
 
 - Build single array of all files to run
 - Load ESM and CJS files async, emitting event before/after file required
