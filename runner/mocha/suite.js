@@ -119,9 +119,7 @@ Suite.prototype.afterAll = function (title, fn) {
 util.inherits(Suite, EventEmitter);
 // Events
 Suite.constants = {
-  EVENT_FILE_POST_REQUIRE: "post-require",
   EVENT_FILE_PRE_REQUIRE: "pre-require",
-  EVENT_FILE_REQUIRE: "require",
   EVENT_ROOT_SUITE_RUN: "run",
   HOOK_TYPE_AFTER_ALL: "afterAll",
   HOOK_TYPE_AFTER_EACH: "afterEach",

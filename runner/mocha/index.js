@@ -162,9 +162,7 @@ Mocha.prototype.loadFilesAsync = async function () {
     // load
     file = path.resolve(file);
     const result = await require(file);
-    // postload
-    suite.emit(Suite.constants.EVENT_FILE_REQUIRE, result, file, self);
-    suite.emit(Suite.constants.EVENT_FILE_POST_REQUIRE, global, file, self);
+    // postload events
   }
 };
 
