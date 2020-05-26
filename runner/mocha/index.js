@@ -152,33 +152,22 @@ Mocha.interfaces = {
   },
 };
 // loads ESM (and CJS) test files asynchronously, then runs root suite
-Mocha.prototype.loadFilesAsync = function () {
+Mocha.prototype.loadFilesAsync = async function () {
   var self = this;
   var suite = this.suite;
 
-  const requireOrImport = async (file) => {
+  for (let file of this.files) {
+    // preload
+    suite.emit(Suite.constants.EVENT_FILE_PRE_REQUIRE, global, file, self);
+    // load
     file = path.resolve(file);
-    return require(file);
-  };
-  const loadFilesAsync = async (files, preLoadFunc, postLoadFunc) => {
-    for (const file of files) {
-      preLoadFunc(file);
-      const result = await requireOrImport(file);
-      postLoadFunc(file, result);
-    }
-  };
-
-  return loadFilesAsync(
-    this.files,
-    function (file) {
-      suite.emit(Suite.constants.EVENT_FILE_PRE_REQUIRE, global, file, self);
-    },
-    function (file, resultModule) {
-      suite.emit(Suite.constants.EVENT_FILE_REQUIRE, resultModule, file, self);
-      suite.emit(Suite.constants.EVENT_FILE_POST_REQUIRE, global, file, self);
-    }
-  );
+    const result = await require(file);
+    // postload
+    suite.emit(Suite.constants.EVENT_FILE_REQUIRE, result, file, self);
+    suite.emit(Suite.constants.EVENT_FILE_POST_REQUIRE, global, file, self);
+  }
 };
+
 Mocha.prototype.run = function (fn) {
   var suite = this.suite;
   var options = this.options;
