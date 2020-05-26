@@ -5,13 +5,13 @@ const path = require("path");
 
 // 2. Runners execution
 async function runMocha(mocha, options) {
-  const { file = [], spec = [] } = options;
+  const { spec = [] } = options;
 
   // if options.watch watchRun()
 
   // singleRun
-  const files = collectFiles({ file, spec });
-  mocha.files = files;
+  // collectFiles and lookupFiles here
+  mocha.files = spec;
   await mocha.loadFilesAsync();
   return mocha.run(exitMochaLater);
 }
@@ -22,19 +22,5 @@ const exitMochaLater = (code) => {
     process.exitCode = Math.min(code, 255);
   });
 };
-
-// lib/cli/collect-files.js
-// Smash together an array of test files in the correct order
-function collectFiles({ ignore, file, spec } = {}) {
-  let files = [];
-  spec.forEach((arg) => {
-    files.push(arg);
-  });
-  if (!files.length) {
-    console.error("Error: No test files found");
-    process.exit(1);
-  }
-  return files;
-}
 
 module.exports = runMocha;
