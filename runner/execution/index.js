@@ -28,25 +28,13 @@ const exitMochaLater = (code) => {
 function collectFiles({ ignore, file, spec } = {}) {
   let files = [];
   spec.forEach((arg) => {
-    const newFiles = lookupFiles(arg);
-    files.push(newFiles);
+    files.push(arg);
   });
   if (!files.length) {
     console.error("Error: No test files found");
     process.exit(1);
   }
   return files;
-}
-
-// lib/utils.js
-function lookupFiles(filepath) {
-  var stat;
-  // Handle file
-  stat = fs.statSync(filepath);
-  if (stat.isFile()) {
-    return filepath;
-  }
-  // Handle directory
 }
 
 module.exports = runMocha;
