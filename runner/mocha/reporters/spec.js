@@ -1,5 +1,4 @@
 const util = require("util");
-const EventEmitter = require("events").EventEmitter;
 const Base = require("./base");
 const Runner = require("../runner");
 
@@ -30,11 +29,6 @@ function Spec(runner, options) {
     if (indents === 1) {
       Base.consoleLog();
     }
-  });
-
-  runner.on(Runner.constants.EVENT_TEST_PENDING, function (test) {
-    var fmt = indent() + color("pending", "  - %s");
-    Base.consoleLog(fmt, test.title);
   });
 
   runner.on(Runner.constants.EVENT_TEST_PASS, function (test) {

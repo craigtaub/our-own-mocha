@@ -1,5 +1,4 @@
 const util = require("util");
-const EventEmitter = require("events").EventEmitter;
 const Runnable = require("./runnable");
 
 // the test

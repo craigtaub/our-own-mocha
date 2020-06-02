@@ -34,9 +34,6 @@ function createStatsCollector(runner) {
   runner.on(Runner.constants.EVENT_TEST_FAIL, function () {
     stats.failures++;
   });
-  runner.on(Runner.constants.EVENT_TEST_PENDING, function () {
-    stats.pending++;
-  });
   runner.on(Runner.constants.EVENT_TEST_END, function () {
     stats.tests++;
   });
@@ -174,8 +171,9 @@ Mocha.prototype.run = function (fn) {
   createStatsCollector(runner);
   var reporter = new this._reporter(runner, options);
 
+  const noop = () => "";
   function done(failures) {
-    fn = fn || utils.noop;
+    fn = fn || noop;
     if (reporter.done) {
       reporter.done(failures, fn);
     } else {

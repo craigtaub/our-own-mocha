@@ -1,5 +1,4 @@
 const util = require("util");
-const EventEmitter = require("events").EventEmitter;
 const Runner = require("../runner");
 const milliseconds = require("ms");
 
@@ -74,13 +73,6 @@ Base.prototype.epilogue = function () {
 
   Base.consoleLog(fmt, stats.passes || 0, milliseconds(stats.duration));
 
-  // pending
-  if (stats.pending) {
-    fmt = color("pending", " ") + color("pending", " %d pending");
-
-    Base.consoleLog(fmt, stats.pending);
-  }
-
   // failures
   if (stats.failures) {
     fmt = color("fail", "  %d failing");
@@ -88,10 +80,7 @@ Base.prototype.epilogue = function () {
     Base.consoleLog(fmt, stats.failures);
 
     Base.list(this.failures);
-    Base.consoleLog();
   }
-
-  Base.consoleLog();
 };
 
 module.exports = Base;
